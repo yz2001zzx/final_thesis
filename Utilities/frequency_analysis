@@ -1,0 +1,58 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the provided CSV file into a DataFrame
+file_path = 'C:/Users/jacky/Desktop/Research Project/Code Repo/bayesian_optimization_results.csv'
+data = pd.read_csv(file_path)
+
+# Combine Alpha, Beta, and Gamma into a single tuple column
+data['Params'] = list(zip(data['Alpha'], data['Beta'], data['Gamma']))
+
+# Perform frequency analysis on the combined parameters
+params_counts = data['Params'].value_counts()
+
+# Determine the most frequent combination
+most_frequent_params = params_counts.idxmax()
+most_frequent_count = params_counts.max()
+
+# Extract individual values from the most frequent combination
+most_frequent_alpha, most_frequent_beta, most_frequent_gamma = most_frequent_params
+
+# Display the results
+overall_best_params = {
+    'Most Frequent Alpha': most_frequent_alpha,
+    'Most Frequent Beta': most_frequent_beta,
+    'Most Frequent Gamma': most_frequent_gamma,
+    'Frequency': most_frequent_count
+}
+
+# Print the results
+print("Overall Best Parameters based on Frequency Analysis:")
+print(f"Alpha: {most_frequent_alpha}")
+print(f"Beta: {most_frequent_beta}")
+print(f"Gamma: {most_frequent_gamma}")
+print(f"Frequency: {most_frequent_count}")
+
+
+# Create a Diagram
+#plt.figure(figsize=(14, 7))
+# Determine colors for the bars
+colors = ['red' if params == most_frequent_params else 'skyblue' for params in params_counts.index]
+# Plot
+params_counts.plot(kind='bar', color=colors)
+
+# Add count labels on top of each bin
+for idx, count in enumerate(params_counts):
+    plt.text(idx, count, str(count), ha='center', va='bottom')
+
+plt.title('Frequency of Each Parameter Combination')
+plt.xlabel('Parameter Combination (Alpha, Beta, Gamma)')
+plt.ylabel('Frequency')
+plt.xticks(rotation=90)
+plt.tight_layout()
+
+# Show the plot
+plt.show()
+
+# Display frequency counts
+params_counts
